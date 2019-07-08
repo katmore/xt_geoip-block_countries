@@ -132,17 +132,11 @@ trap cleanup EXIT
 for p in $TMP_COUNTRY_V4_CSV_PATH $TMP_COUNTRY_V6_CSV_PATH; do
 	[ ! -f "$p" ] || {
 		rm "$p" || {
-        		>&2 echo "unable to delete existing download file: $TMP_COUNTRY_V4_CSV_PATH"
+        		>&2 echo "unable to delete existing download file: $p"
 		        exit 1
 		}
 	}
 done
-[ ! -f "$TMP_COUNTRY_V6_CSV_PATH" ] || {
-	rm $TMP_COUNTRY_V6_CSV_PATH || {
-	        >&2 echo "unable to delete existing download file: $TMP_COUNTRY_V6_CSV_PATH"
-        	exit 1
-	}
-}
 
 # download the GeoLite2 database
 DL_OUTPUT=$($GEOLITE2XTABLES_ROOT/00_download_geolite2 2>&1) || {
@@ -153,14 +147,12 @@ DL_OUTPUT=$($GEOLITE2XTABLES_ROOT/00_download_geolite2 2>&1) || {
 }
 
 # check that expected "country" CSV files exist (from execution of '00_download_geolite2' above)
-[ -f "$TMP_COUNTRY_V4_CSV_PATH" ] || {
-        >&2 echo "missing expected download file: $TMP_COUNTRY_V4_CSV_PATH"
-	exit 1
-}
-[ -f "$TMP_COUNTRY_V6_CSV_PATH" ] || {
-        >&2 echo "missing expected download file: $TMP_COUNTRY_V6_CSV_PATH"
-	exit 1
-}
+for p in $TMP_COUNTRY_V4_CSV_PATH $TMP_COUNTRY_V6_CSV_PATH; do
+	[ -f "$p" ] || {
+		>&2 echo "missing expected download file: $p"
+		exit 1
+	}
+done
 
 # download countryinfo (ISO country codes)
 DL_OUTPUT=$($GEOLITE2XTABLES_ROOT/10_download_countryinfo 2>&1) || {
@@ -182,7 +174,7 @@ cat $TMP_COUNTRY_V4_CSV_PATH $TMP_COUNTRY_V6_CSV_PATH > $TMP_COMBINED_CSV_PATH |
 	exit 1
 }
 
-
+# export a legacy CSV from GeoLite2 data to a temp file ($TMP_LEGACY_CSV_PATH)
 $GEOLITE2XTABLES_ROOT/20_convert_geolite2 $TMP_COUNTRY_TXT_PATH < $TMP_COMBINED_CSV_PATH > $TMP_LEGACY_CSV_PATH 2>/dev/null || {
 	CMD_STATUS=$?
 	if [ -s "$TMP_LEGACY_CSV_PATH" ]; then
@@ -192,7 +184,9 @@ $GEOLITE2XTABLES_ROOT/20_convert_geolite2 $TMP_COUNTRY_TXT_PATH < $TMP_COMBINED_
 	exit 1
 }
 
+# exit if newly exported legacy CSV is same as prior legacy CSV ($LEGACY_CSV_PATH vs. $TMP_LEGACY_CSV_PATH)
 cmp -s $TMP_LEGACY_CSV_PATH $LEGACY_CSV_PATH &&\
 	exit
 
+# move the newly exported legacy CSV temp file to the actual path
 mv $TMP_LEGACY_CSV_PATH $LEGACY_CSV_PATH
