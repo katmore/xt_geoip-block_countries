@@ -12,7 +12,7 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
    ```sh
    $ systemctl restart xt_geoip-block_countries
    ```
- * the geolite2 database is automatically updated every 7 days by the `xt_geoip-block_countries` systemd service
+ * the GeoLite2 cache and geoip database is automatically updated weekly by the `xt_geoip-block_countries` systemd service
 
 ## Requirements
  * iptables
@@ -20,7 +20,7 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
  * bash
  * curl
  * unzip
- * systemd (to keep geolilte2 database up-to-date)
+ * systemd (keeps geoip database up-to-date with GeoLite2 data)
  * Perl
  * Perl module [NetAddr::IP](https://metacpan.org/pod/NetAddr::IP)
  * [GeoLite2xtables](https://github.com/mschmitt/GeoLite2xtables)
