@@ -54,8 +54,7 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
 
 ## Configuration
  * edit `/etc/xt_geoip-block_countries` to configure countries to block IP traffic from.
- * block a country with a [two-letter ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) on it's own line
- * content after a `#` character is ignored (comments)
+ * to block traffic from a country, add its [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) on a separate line
  * to immediately apply changes, restart the `xt_geoip-block_countries` service (see: [Usage](#Usage))
  * example `/etc/xt_geoip-block_countries` *(blocks incoming traffic from the United States and Germany)*
     ```ini
