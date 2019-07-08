@@ -87,4 +87,4 @@ Copyright (c) 2019, Doug Bird. All rights reserved.
 
 Distributed under the terms of the [MIT license](LICENSE) or the [GPLv3](GPLv3) license.
 
-This product includes GeoLite2 data created by MaxMind, available from [https://www.maxmind.com].(https://www.maxmind.com). The GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License. 
+This product includes GeoLite2 data created by MaxMind, available from [https://www.maxmind.com](https://www.maxmind.com). The GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License. 
