@@ -2,7 +2,7 @@
 Block IP traffic by country with a simple configuration using continuously updated geolite2 data.
 
 ## Usage
- * follow [Installation](#Installation) instructions
+ * follow instructions in the [Installation](#Installation) section
  * edit `/etc/xt_geoip-block_countries`, see: [Configuration](#Configuration)
    * to block a country, add a line specifying the ISO country code
  * restart `xt_geoip-block_countries` systemd service
