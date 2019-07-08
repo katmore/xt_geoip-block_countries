@@ -160,10 +160,11 @@ sysd_svc() {
 	[ -n "$d" ] || return 2
 	( [ -z "$SKIP_SYSTEMD" ] || [ "$SKIP_SYSTEMD" = 0 ] ) || return 0
 	copy_file "$s.service" "$d.service"
-	[ ! -f $s.timer ] || {
+	SYSD_SVC[$s.service]=$d.service
+	[ ! -f "$s.timer" ] || {
 		copy_file "$s.timer" "$d.timer"
+		SYSD_SVC[$s.timer]=$d.timer
 	}
-	SYSD_SVC[$s]=$d
 }
 
 # prepare to create $LIB_ROOT as symlink to src/xt_geoip-block_countries/lib
