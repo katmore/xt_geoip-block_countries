@@ -20,10 +20,10 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
  * bash
  * curl
  * unzip
- * systemd (keeps geoip database up-to-date with GeoLite2 data)
  * Perl
  * Perl module [NetAddr::IP](https://metacpan.org/pod/NetAddr::IP)
  * [GeoLite2xtables](https://github.com/mschmitt/GeoLite2xtables)
+ * systemd (optional, to keep geoip database up-to-date with GeoLite2 data)
 
 ## Installation
  * ensure system requirements are met (see: [Requirements](#Requirements))
