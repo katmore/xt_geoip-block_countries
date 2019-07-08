@@ -1,6 +1,8 @@
 # xt_geoip-block_countries
 Block IP traffic by country with a simple configuration using continuously updated geolite2 data.
 
+The intent is to make it easy to maintain iptables rules that will DROP all traffic from countries from which no meaningful traffic will originate, other than abuse. After installation, no countries are blocked by default (see [Configuration](#Configuration)). This is a brutally brain-dead means to manage IP traffic, but it can be a quick and viable solution in many use case. The countries that are blocked will be HIGHLY dependent on local system needs.
+
 ## Usage
  * check the [Requirements](#Requirements) section, and follow the in steps the [Installation](#Installation) section
  * edit `/etc/xt_geoip-block_countries` *(see the [Configuration](#Configuration) section for full details)*
