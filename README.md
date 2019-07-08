@@ -13,9 +13,9 @@ simple configuration for blocking IP traffic by country of origin using continuo
  * the geolite2 database is updated every 7 days by the `xt_geoip-block_countries` systemd service
  
 ## Installation
- * Ensure system requirements are met (see: [Requirements](#Requirements) section)
- * download and extract this project
- * run [`install.sh`](https://github.com/katmore/xt_geoip-block_countries/blob/master/install.sh) script
+ * ensure system requirements are met (see: [Requirements](#Requirements) section)
+ * [download](https://github.com/katmore/xt_geoip-block_countries/archive/master.zip) and extract: https://github.com/katmore/xt_geoip-block_countries/archive/master.zip
+ * run the [`install.sh`](https://github.com/katmore/xt_geoip-block_countries/blob/master/install.sh) script
  * *example: curl/unzip to download/extract, then execute `install.sh`*
     ```sh
     $ cd ~
@@ -34,7 +34,7 @@ simple configuration for blocking IP traffic by country of origin using continuo
  * xtables-addons
  * curl
  * unzip
- * systemd (for geolilte2 updates)
+ * systemd (to keep geolilte2 database up-to-date)
  * Perl
  * Perl module [NetAddr::IP](https://metacpan.org/pod/NetAddr::IP)
  * [GeoLite2xtables](https://github.com/mschmitt/GeoLite2xtables)
