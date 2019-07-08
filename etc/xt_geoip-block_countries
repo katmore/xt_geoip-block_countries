@@ -1,0 +1,19 @@
+# this file is a country block list
+#    the script /usr/local/lib/xt_geoip-block_countries reads this file to
+#    configure iptables
+#
+# the intent is to block countries from which no meaningful traffic will originate
+#   for this system, other than abuse, therefore, it should be modified 
+#   according to local system needs
+# 
+# each line is a two-letter code of a country to block (ingress/egress IP traffic)
+#   see: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+#
+CN # China - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CN
+IN # India - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#IN
+RU # Russian Federation - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#RU
+SA # Saudi Arabia - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#SA
+TR # Turkey - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#TR
+VN # Viet Nam - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#VN
+UA # Ukraine - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#UA
+PK # Pakistan - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#PK

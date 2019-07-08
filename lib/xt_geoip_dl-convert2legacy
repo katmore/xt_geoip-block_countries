@@ -1,0 +1,198 @@
+#!/bin/sh
+# generates an updated GeoIPCountryWhois.csv file if it does not exist or is older than 1 week old
+#
+# for usage, execute this script with the '--usage' flag
+#   `xt_geoip_dl-convert2legacy --usage`
+#
+# dependencies:
+#   GeoLite2xtables: https://github.com/mschmitt/GeoLite2xtables
+#   curl
+#   unzip
+#   perl
+#   perl module NetAddr::IP
+#
+# see: https://github.com/katmore/xt_geoip-block-countries
+# @author D. Bird <retran@gmail.com>
+
+LEGACY_CSV_PATH=GeoIPCountryWhois.csv
+
+FALLBACK_GEOLITE2TABLES_ROOT=/usr/local/lib/GeoLite2xtables
+[ -n "$GEOLITE2XTABLES_ROOT" ] || GEOLITE2XTABLES_ROOT=$FALLBACK_GEOLITE2TABLES_ROOT
+
+LEGACY_CSV_TTL=604800
+
+# TMP_COUNTRY_V4_CSV_PATH: IPv4 blocks by country csv
+#   for some reason, GeoLite2xtables scripts hard-coded a paths in the /tmp dir
+TMP_COUNTRY_V4_CSV_PATH=/tmp/GeoLite2-Country-Blocks-IPv4.csv
+
+# TMP_COUNTRY_V4_CSV_PATH: IPv6 blocks by country csv
+#   for some reason, GeoLite2xtables scripts hard-coded a paths in the /tmp dir
+TMP_COUNTRY_V6_CSV_PATH=/tmp/GeoLite2-Country-Blocks-IPv6.csv
+
+# TMP_COUNTRY_V4_CSV_PATH: ISO country codes
+#   for some reason, GeoLite2xtables scripts hard-coded a paths in the /tmp dir
+TMP_COUNTRY_TXT_PATH=/tmp/CountryInfo.txt
+
+# script localization
+ME=xt_geoip_dl-convert2legacy
+CALLNAME=$(basename $0)
+
+# parse arguments for help mode flags
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--)
+		break
+		;;
+		-h|-u|-a|-v|--help|--usage|--about|--version)
+		echo $ME
+		echo 'Downloads GeoLite2 country IP data and converts it into a "legacy" format CSV file.'
+		echo '(c) 2019 ActivePitch, Inc. All Rights Reserved.'
+		echo
+		echo 'Usage:'
+		echo "  $CALLNAME [SAVE-PATH](=$LEGACY_CSV_PATH)"
+	        echo
+	        echo 'Arguments:'
+	        echo '  SAVE-PATH : optionally specify path for legacy CSV file'
+	        echo "    default value: $LEGACY_CSV_PATH"
+	        echo
+	        echo 'Environment Variables'
+	        echo '  GEOLITE2XTABLES_ROOT : path to GeoLite2xtables lib'
+	        echo "    default value: $FALLBACK_GEOLITE2TABLES_ROOT"
+	        echo '    to install GeoLite2xtables, see: https://github.com/mschmitt/GeoLite2xtables'
+		echo
+		echo '  LEGACY_CSV_TTL : number of seconds until a CSV file will be re-generated'
+		echo "    default value: $LEGACY_CSV_TTL"
+		exit 0
+		;;
+		-*)
+		;;
+		*)
+		break
+		;;
+	esac
+	shift
+done
+
+# if <SAVE-PATH> arg is present,
+#   use it for output path instead of the default $LEGACY_CSV_PATH (GeoIPCountryWhois.csv)
+[ -z "$1" ] || {
+	LEGACY_CSV_PATH="$1"
+	shift
+	# check write permission
+	if [ -f "$LEGACY_CSV_PATH" ]; then
+		[ -w "$LEGACY_CSV_PATH" ] || {
+			>&2 echo "invalid <SAVE-PATH>, missing write permission: $LEGACY_CSV_PATH"
+			exit 2
+		}
+	else
+		[ -w "$(dirname $LEGACY_CSV_PATH)" ] || {
+			>&2 echo "invalid <SAVE-PATH>, missing write permission to directory: $(realpath $(dirname $LEGACY_CSV_PATH))"
+			exit 2
+		}
+	fi
+	echo "SAVE-PATH: $LEGACY_CSV_PATH"
+}
+
+# if CSV file already exists ($LEGACY_CSV_PATH, 'GeoIPCountryWhois.csv' by default)
+#   check age of file and exit if not older than TTL ($LEGACY_CSV_TTL, 1 week by default)
+#
+# in other words... avoid the somewhat lengthy process of downloading the GeoLite2 database 
+#   and re-generating a formatted CSV unless it has been 1 week (by default) since last doing so
+[ ! -s "$LEGACY_CSV_PATH" ] || {
+	CSV_MODIFIED=$(stat -c "%Y" $LEGACY_CSV_PATH)
+	CSV_AGE=$(( $(date +%s) - $CSV_MODIFIED ))
+	[ "$CSV_AGE" -gt "$LEGACY_CSV_TTL" ] || {
+		>&2 echo "CSV already exists that is younger than TTL of $LEGACY_CSV_TTL seconds: $(realpath $LEGACY_CSV_PATH)"
+		exit 0
+	}
+}
+
+# temp legacy CSV file
+TMP_LEGACY_CSV_PATH=$(mktemp) || {
+	>&2 echo "failed to prepare temporary legacy CSV file"
+	exit 1
+}
+# temp combined CSV file
+TMP_COMBINED_CSV_PATH=$(mktemp) || {
+        >&2 echo "failed to prepare temporary combined CSV file"
+        exit 1
+}
+
+# exit trap to delete temp files
+cleanup() {
+	rm -f $TMP_COUNTRY_V4_CSV_PATH
+	rm -f $TMP_COUNTRY_V6_CSV_PATH
+	rm -f $TMP_COMBINED_CSV_PATH
+	rm -f $TMP_COUNTRY_TXT_PATH
+	rm -f $TMP_LEGACY_CSV_PATH
+}
+trap cleanup EXIT
+
+# remove existing "country" CSV files if they exist
+for p in $TMP_COUNTRY_V4_CSV_PATH $TMP_COUNTRY_V6_CSV_PATH; do
+	[ ! -f "$p" ] || {
+		rm "$p" || {
+        		>&2 echo "unable to delete existing download file: $TMP_COUNTRY_V4_CSV_PATH"
+		        exit 1
+		}
+	}
+done
+[ ! -f "$TMP_COUNTRY_V6_CSV_PATH" ] || {
+	rm $TMP_COUNTRY_V6_CSV_PATH || {
+	        >&2 echo "unable to delete existing download file: $TMP_COUNTRY_V6_CSV_PATH"
+        	exit 1
+	}
+}
+
+# download the GeoLite2 database
+DL_OUTPUT=$($GEOLITE2XTABLES_ROOT/00_download_geolite2 2>&1) || {
+	DL_STATUS=$?
+	>&2 echo "download error, 00_download_geolite2 failed with exit code $DL_STATUS..."
+	>&2 echo "$DL_OUTPUT"
+	return $DL_STATUS
+}
+
+# check that expected "country" CSV files exist (from execution of '00_download_geolite2' above)
+[ -f "$TMP_COUNTRY_V4_CSV_PATH" ] || {
+        >&2 echo "missing expected download file: $TMP_COUNTRY_V4_CSV_PATH"
+	exit 1
+}
+[ -f "$TMP_COUNTRY_V6_CSV_PATH" ] || {
+        >&2 echo "missing expected download file: $TMP_COUNTRY_V6_CSV_PATH"
+	exit 1
+}
+
+# download countryinfo (ISO country codes)
+DL_OUTPUT=$($GEOLITE2XTABLES_ROOT/10_download_countryinfo 2>&1) || {
+        DL_STATUS=$?
+        >&2 echo "download error, 10_download_countryinfo failed with exit code $DL_STATUS..."
+        >&2 echo "$DL_OUTPUT"
+        return $DL_STATUS
+}
+
+# check that expected countryinfo file exists (from execution of '10_download_countryinfo' above)
+[ -f "$TMP_COUNTRY_TXT_PATH" ] || {
+        >&2 echo "missing expected download file: $TMP_COUNTRY_TXT_PATH"
+	exit 1
+}
+
+# combine ipv6 and ipv4 files
+cat $TMP_COUNTRY_V4_CSV_PATH $TMP_COUNTRY_V6_CSV_PATH > $TMP_COMBINED_CSV_PATH || {
+	>&2 echo "unable to combine csv files, 'cat' failed with status $?"
+	exit 1
+}
+
+
+$GEOLITE2XTABLES_ROOT/20_convert_geolite2 $TMP_COUNTRY_TXT_PATH < $TMP_COMBINED_CSV_PATH > $TMP_LEGACY_CSV_PATH 2>/dev/null || {
+	CMD_STATUS=$?
+	if [ -s "$TMP_LEGACY_CSV_PATH" ]; then
+		>&2 tail $TMP_LEGACY_CSV_PATH
+	fi
+	>&2 echo "cannot generate CSV file, '20_convert_geolite2' failed with status $CMD_STATUS"
+	exit 1
+}
+
+cmp -s $TMP_LEGACY_CSV_PATH $LEGACY_CSV_PATH &&\
+	exit
+
+mv $TMP_LEGACY_CSV_PATH $LEGACY_CSV_PATH

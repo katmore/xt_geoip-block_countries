@@ -1,0 +1,11 @@
+[Unit]
+Description="xt_geoip block countries for iptables startup"
+After=network.target
+
+[Service]
+Type=oneshot
+StandardOutput=journal
+ExecStart=/usr/local/lib/xt_geoip-block_countries/xt_geoip-build
+
+[Install]
+WantedBy=multi-user.target
