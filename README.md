@@ -83,8 +83,8 @@ This project has been tested with the following operating systems:
  * CentOS 7
     
 ## Legal
-Distributed under the terms of the [MIT license](LICENSE) or the [GPLv3](GPLv3) license.
-
 Copyright (c) 2019, Doug Bird. All rights reserved.
 
-This product includes GeoLite2 data created by MaxMind, available from [https://www.maxmind.com](https://www.maxmind.com).
+Distributed under the terms of the [MIT license](LICENSE) or the [GPLv3](GPLv3) license.
+
+This product includes GeoLite2 data created by MaxMind, available from [https://www.maxmind.com].(https://www.maxmind.com). The GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License. 
