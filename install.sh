@@ -204,7 +204,7 @@ done
 }
 
 #
-# symlink paths in $DIR_CP array
+# recursively copy paths in $DIR_CP array
 for s in "${!DIR_CP[@]}"; do
   d=${DIR_CP[$s]}
   cp -r "$s" "$d" || {
