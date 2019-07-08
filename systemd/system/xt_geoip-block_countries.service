@@ -1,5 +1,5 @@
 [Unit]
-Description="xt_geoip block countries for iptables startup"
+Description=Update geoip database from geolite2 data and apply country block list
 After=network.target
 
 [Service]
