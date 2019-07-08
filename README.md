@@ -49,7 +49,7 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
         --uninstall : uninstall and exit
         --skip-systemd : do not create or enable systemd unit files
       ```
- * Edit country block configuration as needed (`/etc/xt_geoip-block_countries`), see: [Configuration](#Configuration)
+ * To block a country, see: [Configuration](#Configuration)
  * For ongoing operation, see: [Usage](#Usage)
 
 ## Configuration
