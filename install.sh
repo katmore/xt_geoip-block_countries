@@ -41,15 +41,15 @@ FORCE=
 UNINSTALL=
 
 # parse options
-while getopts f-: o; do
+while getopts hf-: o; do
   case "$o" in
     f) FORCE=1;;
-    h) help; exit;;
+    h|u|a|v) help; exit;;
     -)
     case "$OPTARG" in
       force) FORCE=1;;
       uninstall) UNINSTALL=1;;
-      help) help; exit;;
+      help|usage|about|version) help; exit;;
       '') break;;
     esac
     ;;
