@@ -35,9 +35,18 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
     $ unzip xt_geoip-block_countries-master.zip
     $ xt_geoip-block_countries-master/install.sh
     ```
- * try `install.sh --help` to see more install script options
+ * see `install.sh --help` for all install script options
    ```sh
-   $ ./install.sh
+   $ xt_geoip-block_countries-master/install.sh --help
+   ```
+   ```txt
+   usage:
+     install.sh [--force] [--uninstall] [--skip-systemd]
+
+   options:
+     --force : remove or overwrite unrecognized files or directories in destination paths
+     --uninstall : uninstall and exit
+     --skip-systemd : do not create or enable systemd unit files
    ```
  * To configure `/etc/xt_geoip-block_countries`, see: [Configuration](#Configuration)
  * For ongoing operation, see: [Usage](#Usage)
