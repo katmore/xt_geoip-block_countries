@@ -29,27 +29,27 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
  * ensure system requirements are met (see: [Requirements](#Requirements))
  * [download](https://github.com/katmore/xt_geoip-block_countries/archive/master.zip) and extract: https://github.com/katmore/xt_geoip-block_countries/archive/master.zip
  * run the [`install.sh`](https://github.com/katmore/xt_geoip-block_countries/blob/master/install.sh) script
- * *example: curl/unzip to download/extract, then execute `install.sh`*
-    ```sh
-    $ cd ~
-    $ curl https://github.com/katmore/xt_geoip-block_countries/archive/master.zip -OJL
-    $ unzip xt_geoip-block_countries-master.zip
-    $ xt_geoip-block_countries-master/install.sh
-    ```
- * see `install.sh --help` for all install script options
-   ```sh
-   $ xt_geoip-block_countries-master/install.sh --help
-   ```
-   ```txt
-   usage:
-     install.sh [--force] [--uninstall] [--skip-systemd]
+    * example: *curl/unzip to download/extract, then execute `install.sh`*
+       ```sh
+       $ cd ~
+       $ curl https://github.com/katmore/xt_geoip-block_countries/archive/master.zip -OJL
+       $ unzip xt_geoip-block_countries-master.zip
+       $ xt_geoip-block_countries-master/install.sh
+       ```
+    * see `install.sh --help` for all install script options
+      ```sh
+      $ xt_geoip-block_countries-master/install.sh --help
+      ```
+      ```txt
+      usage:
+        install.sh [--force] [--uninstall] [--skip-systemd]
 
-   options:
-     --force : remove or overwrite unrecognized files or directories in destination paths
-     --uninstall : uninstall and exit
-     --skip-systemd : do not create or enable systemd unit files
-   ```
- * To configure `/etc/xt_geoip-block_countries`, see: [Configuration](#Configuration)
+      options:
+        --force : remove or overwrite unrecognized files or directories in destination paths
+        --uninstall : uninstall and exit
+        --skip-systemd : do not create or enable systemd unit files
+      ```
+ * Edit country block configuration as needed (`/etc/xt_geoip-block_countries`), see: [Configuration](#Configuration)
  * For ongoing operation, see: [Usage](#Usage)
 
 ## Configuration
