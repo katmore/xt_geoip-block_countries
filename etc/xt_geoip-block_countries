@@ -6,7 +6,7 @@
 # lines starting with the '#' char are ignored (comments)
 # all text after the first '#' char is ignored (comments)
 #
-# each line is a two-letter ISO code of a country to block (ingress IP traffic)
+# each line is a two-letter ISO code of a country to block (DROP all ingress IP traffic)
 #   (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
 #
 # to immediately apply changes, restart the xt_geoip-block_countries service
