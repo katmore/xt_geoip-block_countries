@@ -1,7 +1,9 @@
 # xt_geoip-block_countries
-Block IP traffic by country with a simple configuration using continuously updated geolite2 data.
+Block IP traffic by country with simple configuration using continuously updated geolite2 data.
 
-The intent is to make it easy to maintain iptables rules that will DROP all traffic from countries from which no meaningful traffic will originate, other than abuse. After installation, no countries are blocked by default (see [Configuration](#Configuration)). This is a blunt means to manage IP traffic, but it can be a quick and viable solution in many use cases. Any countries that are blocked with this tool should be selected VERY CAREFULLY according to the local system needs.
+The intent is to make it easy to maintain iptables rules that will DROP all traffic from countries from which no meaningful traffic will originate, other than abuse. After installation, no countries are blocked by default (see [Configuration](#Configuration)). 
+
+USE WITH CARE: blocking an entire country's traffic is a blunt means to manage IP traffic, but it can be a quick and viable solution in many use cases. Any country that is blocked with this tool should be selected VERY CAREFULLY according to the local system needs.
 
 ## Usage
  * check the [Requirements](#Requirements) section, and follow the in steps the [Installation](#Installation) section
