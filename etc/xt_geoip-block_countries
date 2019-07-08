@@ -17,7 +17,7 @@
 # USE WITH CARE: blocking an entire country's traffic is a rather blunt method to manage IP traffic
 #
 ## for convenience, some well-known country codes are provided below
-## just uncomment any you wish to block (remove the first '#' char)
+## uncomment any you wish to block (remove the first '#' char)
 
 #CN # China - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CN
 #IN # India - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#IN
