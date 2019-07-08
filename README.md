@@ -74,11 +74,11 @@ After [installation](#Installation), the following scripts will be located in th
   
 ## Systemd Unit Files
 After [installation](#Installation), the following unit files will be located in the `/lib/systemd/system` directory.
- * **xt_geoip-block_countries.service** : 
- * **xt_geoip-block_countries.timer**
+ * [**xt_geoip-block_countries.service**](systemd/system/xt_geoip-block_countries.service) : Update geoip database from latest GeoLite2 data and apply country block list
+ * [**xt_geoip-block_countries.timer**](systemd/system/xt_geoip-block_countries.timer) : Weekly updates to geoip database from latest GeoLite2 data
  
 ## OS Support
-This project has been tested with the following Linux distributions:
+This project has been tested with the following operating systems:
  * Ubuntu 18.04 LTS
  * CentOS 7
     
