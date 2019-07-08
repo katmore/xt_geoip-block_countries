@@ -7,13 +7,18 @@
 #
 # environment variables:
 #   GEOIP_ROOT : root directory of GeoLite2 cache and legacy GeoIPCountryWhois.csv file
-#                default value: /usr/share/xt_geoip
+#     default value: /usr/share/xt_geoip
 #
 #   GEOLITE2XTABLES_ROOT : path to GeoLite2xtables lib
-#                          default value: /usr/local/lib/GeoLite2xtables
+#     default value: /usr/local/lib/GeoLite2xtables
+#     to install GeoLite2xtables, see: https://github.com/mschmitt/GeoLite2xtables
 # 
 # see: https://github.com/katmore/xt_geoip-block-countries
-# @author D. Bird <retran@gmail.com>
+# author: D. Bird <retran@gmail.com>
+# (c) 2019 Doug Bird. All Rights Reserved.
+# Distributed under the terms of the MIT license or the GPLv3 license.
+# This product includes GeoLite2 data created by MaxMind, available from https://www.maxmind.com
+# The GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License.
 
 # $GEOIP_ROOT : root directory of GeoLite2 cache and legacy GeoIPCountryWhois.csv file
 [ -n "$GEOIP_ROOT" ] || GEOIP_ROOT=/usr/share/xt_geoip
@@ -32,12 +37,12 @@ help() {
 }
 
 # parse options
-while getopts h-: o; do
+while getopts huav-: o; do
   case "$o" in
-    h) help; exit;;
+    h|u|a|v) help; exit;;
     -)
     case "$OPTARG" in
-      help) help; exit;;
+      help|usage|about|version) help; exit;;
       '') break;;
     esac
     ;;

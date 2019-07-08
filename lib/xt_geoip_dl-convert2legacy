@@ -23,7 +23,9 @@
 # see: https://github.com/katmore/xt_geoip-block-countries
 # author: D. Bird <retran@gmail.com>
 # (c) 2019 Doug Bird. All Rights Reserved
+# Distributed under the terms of the MIT license or the GPLv3 license.
 # This product includes GeoLite2 data created by MaxMind, available from https://www.maxmind.com
+# The GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License.
 
 LEGACY_CSV_PATH=GeoIPCountryWhois.csv
 
