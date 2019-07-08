@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# add iptables rules to drop all IP traffic from countries in block list
-#   block list: /etc/xt_geoip-block_countries
+# applies iptables rules to DROP all IP traffic from each country in the block countries config
+#   config file: /etc/xt_geoip-block_countries
 #
 # see: https://github.com/katmore/xt_geoip-block_countries
 # @author D. Bird <retran@gmail.com>
