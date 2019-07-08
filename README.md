@@ -1,12 +1,11 @@
 # xt_geoip-block_countries
 Block IP traffic by country with a simple configuration using continuously updated geolite2 data.
 
-The intent is to make it easy to maintain iptables rules that will DROP all traffic from countries from which no meaningful traffic will originate, other than abuse. After installation, no countries are blocked by default (see [Configuration](#Configuration)). This is a brutally brain-dead means to manage IP traffic, but it can be a quick and viable solution in many use case. The countries that are blocked will be HIGHLY dependent on local system needs.
+The intent is to make it easy to maintain iptables rules that will DROP all traffic from countries from which no meaningful traffic will originate, other than abuse. After installation, no countries are blocked by default (see [Configuration](#Configuration)). This is a blunt means to manage IP traffic, but it can be a quick and viable solution in many use cases. Any countries that are blocked with this tool should be selected VERY CAREFULLY according to the local system needs.
 
 ## Usage
  * check the [Requirements](#Requirements) section, and follow the in steps the [Installation](#Installation) section
- * edit `/etc/xt_geoip-block_countries` *(see the [Configuration](#Configuration) section for full details)*
-   * to block a country, add a line specifying the ISO country code
+ * edit `/etc/xt_geoip-block_countries` *(see the [Configuration](#Configuration) section)*
  * restart `xt_geoip-block_countries` systemd service to immediately apply configuration changes
    ```sh
    $ systemctl restart xt_geoip-block_countries
@@ -48,12 +47,10 @@ The intent is to make it easy to maintain iptables rules that will DROP all traf
  * to immediately apply changes, restart the `xt_geoip-block_countries` service (see: [Usage](#Usage))
  * example `/etc/xt_geoip-block_countries` *(blocks incoming traffic from the United States and Germany)*
     ```ini
-    # this file is a country block list used by xt_geoip-block_countries 
+    # /etc/xt_geoip-block_countries
+    # configuration used by 'xt_geoip-block_countries' to block IP traffic by country of origin 
     #   (https://github.com/katmore/xt_geoip-block_countries)
-    # each line is a two-letter ISO code of a country to block (ingress IP traffic)
-    #   (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-    # to immediately apply changes, restart the xt_geoip-block_countries service
-    #   `systemctl restart xt_geoip-block_countries`
+    # ...
     US 
     DE
     ```
