@@ -1,8 +1,9 @@
 [Unit]
-Description=
+Description=Weekly updates to geoip database from geolite2 data
 
 [Timer]
-OnUnitActiveSec=1w 
+OnCalendar=weekly
+Persistent=true
 
 [Install]
 WantedBy=timers.target
