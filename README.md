@@ -17,6 +17,7 @@ USE WITH CARE: blocking an entire country's traffic is a blunt means to manage I
 ## Requirements
  * iptables
  * xtables-addons
+ * bash
  * curl
  * unzip
  * systemd (to keep geolilte2 database up-to-date)
