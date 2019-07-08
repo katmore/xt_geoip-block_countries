@@ -1,19 +1,31 @@
-# this file is a country block list
-#    the script /usr/local/lib/xt_geoip-block_countries reads this file to
-#    configure iptables
+# /etc/xt_geoip-block_countries
+# configuration used by 'xt_geoip-block_countries' to block IP traffic by country of origin 
+#   (https://github.com/katmore/xt_geoip-block_countries)
 #
-# the intent is to block countries from which no meaningful traffic will originate
-#   for this system, other than abuse, therefore, it should be modified 
-#   according to local system needs
-# 
-# each line is a two-letter code of a country to block (ingress/egress IP traffic)
-#   see: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+# whitespace is ignored
+# lines starting with the '#' char are ignored (comments)
+# all text after the first '#' char is ignored (comments)
 #
-CN # China - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CN
-IN # India - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#IN
-RU # Russian Federation - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#RU
-SA # Saudi Arabia - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#SA
-TR # Turkey - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#TR
-VN # Viet Nam - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#VN
-UA # Ukraine - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#UA
-PK # Pakistan - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#PK
+# each line is a two-letter ISO code of a country to block (ingress IP traffic)
+#   (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+#
+# to immediately apply changes, restart the xt_geoip-block_countries service
+#   `systemctl restart xt_geoip-block_countries`
+#
+# to block traffic from a country, add its country code on a separate line
+#
+# USE WITH CARE: blocking an entire country's traffic is a rather blunt method to manage IP traffic
+#
+## for convenience, some well-known country codes are provided below
+## just uncomment any you wish to block (remove the first '#' char)
+
+#CN # China - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CN
+#IN # India - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#IN
+#RU # Russian Federation - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#RU
+#SA # Saudi Arabia - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#SA
+#TR # Turkey - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#TR
+#VN # Viet Nam - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#VN
+#UA # Ukraine - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#UA
+#PK # Pakistan - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#PK
+#US # United States - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#US
+#DE # Germany - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#DE
