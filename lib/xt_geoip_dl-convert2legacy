@@ -1,8 +1,17 @@
-#!/bin/sh
-# generates an updated GeoIPCountryWhois.csv file if it does not exist or is older than 1 week old
+#!/usr/bin/env bash
+# xt_geoip_dl-convert2legacy
+# updates GeoLite2 cache and exports it into a "legacy" format CSV file (so it can be used by xtables geoip)
 #
-# for usage, execute this script with the '--usage' flag
-#   `xt_geoip_dl-convert2legacy --usage`
+# usage:
+#   xt_geoip_dl-convert2legacy [SAVE-PATH](=GeoIPCountryWhois.csv)
+#
+# arguments:
+#   SAVE-PATH : optionally specify path for legacy CSV file
+#     default value: GeoIPCountryWhois.csv
+#
+# environment variables
+#   GEOLITE2XTABLES_ROOT : path to GeoLite2xtables lib
+#     default value: /usr/local/lib/GeoLite2xtables
 #
 # dependencies:
 #   GeoLite2xtables: https://github.com/mschmitt/GeoLite2xtables
@@ -12,7 +21,9 @@
 #   perl module NetAddr::IP
 #
 # see: https://github.com/katmore/xt_geoip-block-countries
-# @author D. Bird <retran@gmail.com>
+# author: D. Bird <retran@gmail.com>
+# (c) 2019 Doug Bird. All Rights Reserved
+# This product includes GeoLite2 data created by MaxMind, available from https://www.maxmind.com
 
 LEGACY_CSV_PATH=GeoIPCountryWhois.csv
 
@@ -33,45 +44,32 @@ TMP_COUNTRY_V6_CSV_PATH=/tmp/GeoLite2-Country-Blocks-IPv6.csv
 #   for some reason, GeoLite2xtables scripts hard-coded a paths in the /tmp dir
 TMP_COUNTRY_TXT_PATH=/tmp/CountryInfo.txt
 
-# script localization
-ME=xt_geoip_dl-convert2legacy
-CALLNAME=$(basename $0)
+# FUNCTION: help
+#   outputs reflective "help" message using comments from top of this script file
+help() {
+  local l=
+  while read -r l; do
+    [ "${l:0:1}" = "#" ] || break
+    l=${l:1}
+    [ -n "${l//[[:blank:]]/}" ] || l=""
+    [ "${l:0:1}" != " " ] || l=${l:1}
+    echo "$l"
+  done < <(tail -n +2 "${BASH_SOURCE[0]}")
+}
 
-# parse arguments for help mode flags
-while [ $# -gt 0 ]; do
-	case "$1" in
-		--)
-		break
-		;;
-		-h|-u|-a|-v|--help|--usage|--about|--version)
-		echo $ME
-		echo 'Downloads GeoLite2 country IP data and converts it into a "legacy" format CSV file.'
-		echo '(c) 2019 ActivePitch, Inc. All Rights Reserved.'
-		echo
-		echo 'Usage:'
-		echo "  $CALLNAME [SAVE-PATH](=$LEGACY_CSV_PATH)"
-	        echo
-	        echo 'Arguments:'
-	        echo '  SAVE-PATH : optionally specify path for legacy CSV file'
-	        echo "    default value: $LEGACY_CSV_PATH"
-	        echo
-	        echo 'Environment Variables'
-	        echo '  GEOLITE2XTABLES_ROOT : path to GeoLite2xtables lib'
-	        echo "    default value: $FALLBACK_GEOLITE2TABLES_ROOT"
-	        echo '    to install GeoLite2xtables, see: https://github.com/mschmitt/GeoLite2xtables'
-		echo
-		echo '  LEGACY_CSV_TTL : number of seconds until a CSV file will be re-generated'
-		echo "    default value: $LEGACY_CSV_TTL"
-		exit 0
-		;;
-		-*)
-		;;
-		*)
-		break
-		;;
-	esac
-	shift
+# parse options
+while getopts huav-: o; do
+  case "$o" in
+    h|u|a|v) help; exit;;
+    -)
+    case "$OPTARG" in
+      help|usage|about|version) help; exit;;
+      '') break;;
+    esac
+    ;;
+  esac
 done
+shift $((OPTIND-1))
 
 # if <SAVE-PATH> arg is present,
 #   use it for output path instead of the default $LEGACY_CSV_PATH (GeoIPCountryWhois.csv)

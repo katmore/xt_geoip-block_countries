@@ -1,19 +1,79 @@
 #!/usr/bin/env bash
-# updates xt_geoip database if it is older than 1 week old
+# xt_geoip-build
+# updates the GeoLite2 cache and legacy GeoIPCountryWhois.csv (using `xt_geoip_dl-convert2legacy`) then re-builds the geoip database
+#
+# usage:
+#   xt_geoip-build
+#
+# environment variables:
+#   GEOIP_ROOT : root directory of GeoLite2 cache and legacy GeoIPCountryWhois.csv file
+#                default value: /usr/share/xt_geoip
+#
+#   GEOLITE2XTABLES_ROOT : path to GeoLite2xtables lib
+#                          default value: /usr/local/lib/GeoLite2xtables
 # 
 # see: https://github.com/katmore/xt_geoip-block-countries
 # @author D. Bird <retran@gmail.com>
 
-[ -d /usr/share/xt_geoip ] || {
-	mkdir -p /usr/share/xt_geoip || exit
+# $GEOIP_ROOT : root directory of GeoLite2 cache and legacy GeoIPCountryWhois.csv file
+[ -n "$GEOIP_ROOT" ] || GEOIP_ROOT=/usr/share/xt_geoip
+
+# FUNCTION: help
+#   outputs reflective "help" message using comments from top of this script file
+help() {
+  local l=
+  while read -r l; do
+    [ "${l:0:1}" = "#" ] || break
+    l=${l:1}
+    [ -n "${l//[[:blank:]]/}" ] || l=""
+    [ "${l:0:1}" != " " ] || l=${l:1}
+    echo "$l"
+  done < <(tail -n +2 "${BASH_SOURCE[0]}")
 }
 
-cd /usr/share/xt_geoip || exit
+# parse options
+while getopts h-: o; do
+  case "$o" in
+    h) help; exit;;
+    -)
+    case "$OPTARG" in
+      help) help; exit;;
+      '') break;;
+    esac
+    ;;
+  esac
+done
+shift $((OPTIND-1))
 
-echo 'download and format GeoIP data: in progress (this may take a while)'
+# create $GEOIP_ROOT directory if it does not exist
+[ -d $GEOIP_ROOT ] || {
+	mkdir -p $GEOIP_ROOT || exit
+}
 
+# change to $GEOIP_ROOT directory
+cd $GEOIP_ROOT || exit
+
+# if $GEOLITE2XTABLES_ROOT, export as environment variable (for xt_geoip_dl-convert2legacy)
+[ -z "$GEOLITE2XTABLES_ROOT" ] || {
+  export GEOLITE2XTABLES_ROOT=$GEOLITE2XTABLES_ROOT
+}
+
+# status message
+echo 'update Geolite2 cache and legacy GeoIPCountryWhois.csv: in progress (this may take a while)'
+
+#
+# update GeoLite2 cache and legacy CSV (execute xt_geoip_dl-convert2legacy)
 /usr/local/lib/xt_geoip-block_countries/xt_geoip_dl-convert2legacy || exit
 
-echo 'download and format GeoIP data: complete'
+# status message
+echo 'update Geolite2 cache and legacy GeoIPCountryWhois.csv: complete'
 
-/usr/lib/xtables-addons/xt_geoip_build -D /usr/share/xt_geoip /usr/share/xt_geoip/GeoIPCountryWhois.csv
+# status message
+echo 'build geoip database from legacy GeoIPCountryWhois.csv: in progress'
+
+#
+# rebuild geoip database from GeoLite2 legacy GeoIPCountryWhois.csv
+/usr/lib/xtables-addons/xt_geoip_build -D $GEOIP_ROOT $GEOIP_ROOT/GeoIPCountryWhois.csv
+
+# status message
+echo 'build geoip database from legacy GeoIPCountryWhois.csv: complete'

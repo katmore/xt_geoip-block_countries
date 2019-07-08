@@ -1,13 +1,49 @@
 #!/usr/bin/env bash
+# xt_geoip-block_countries
 # applies iptables rules to DROP all IP traffic from each country in the block countries config
-#   config file: /etc/xt_geoip-block_countries
+#
+# usage:
+#   xt_geoip-block_countries
+#
+# environment variables:
+#   BLOCK_COUNTRIES_CONFIG : path to block countries config file (country block list)
+#     default value: /etc/xt_geoip-block_countries
 #
 # see: https://github.com/katmore/xt_geoip-block_countries
-# @author D. Bird <retran@gmail.com>
+# author: D. Bird <retran@gmail.com>
+# (c) 2019 Doug Bird. All Rights Reserved.
+# This product includes GeoLite2 data created by MaxMind, available from https://www.maxmind.com
 
 set -o pipefail
 
 [ -n "$BLOCK_COUNTRIES_CONFIG" ] || BLOCK_COUNTRIES_CONFIG=/etc/xt_geoip-block_countries
+
+# FUNCTION: help
+#   outputs reflective "help" message using comments from top of this script file
+help() {
+  local l=
+  while read -r l; do
+    [ "${l:0:1}" = "#" ] || break
+    l=${l:1}
+    [ -n "${l//[[:blank:]]/}" ] || l=""
+    [ "${l:0:1}" != " " ] || l=${l:1}
+    echo "$l"
+  done < <(tail -n +2 "${BASH_SOURCE[0]}")
+}
+
+# parse options
+while getopts huav-: o; do
+  case "$o" in
+    h|u|a|v) help; exit;;
+    -)
+    case "$OPTARG" in
+      help|usage|about|version) help; exit;;
+      '') break;;
+    esac
+    ;;
+  esac
+done
+shift $((OPTIND-1))
 
 echo "block countries config: $BLOCK_COUNTRIES_CONFIG"
 
