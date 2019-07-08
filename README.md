@@ -76,6 +76,11 @@ After [installation](#Installation), the following scripts will be located in th
 After [installation](#Installation), the following unit files will be located in the `/lib/systemd/system` directory.
  * **xt_geoip-block_countries.service** : 
  * **xt_geoip-block_countries.timer**
+ 
+## OS Support
+This project has been tested with the following Linux distributions:
+ * Ubuntu 18.04 LTS
+ * CentOS 7
     
 ## Legal
 Distributed under the terms of the [MIT license](LICENSE) or the [GPLv3](GPLv3) license.
