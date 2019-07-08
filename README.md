@@ -1,5 +1,5 @@
 # xt_geoip-block_countries
-Block IP traffic by country with simple configuration using continuously updated geolite2 data.
+Block IP traffic by country with simple configuration using continuously updated [GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) data.
 
 The intent is to make it easy to maintain iptables rules that will DROP all traffic from countries from which no meaningful traffic will originate, other than abuse. After installation, no countries are blocked by default (see [Configuration](#Configuration)). 
 
@@ -78,7 +78,8 @@ After [installation](#Installation), the following unit files will be located in
  * **xt_geoip-block_countries.timer**
     
 ## Legal
-"xt_geoip-block_countries" is distributed under the terms of the [MIT license](LICENSE) or the [GPLv3](GPLv3) license.
+Distributed under the terms of the [MIT license](LICENSE) or the [GPLv3](GPLv3) license.
 
-Copyright (c) 2019, Doug Bird.
-All rights reserved.
+Copyright (c) 2019, Doug Bird. All rights reserved.
+
+This product includes GeoLite2 data created by MaxMind, available from [https://www.maxmind.com](https://www.maxmind.com).
